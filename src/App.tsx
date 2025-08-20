@@ -10,7 +10,9 @@ import ContextNotificationPanel from './components/contexts/ContextNotificationP
 import ReduxCounterPanel from './components/redux/ReduxCounterPanel';
 import ReduxTodoPanel from './components/redux/ReduxTodoPanel';
 import RecoilCounterPanel from './components/recoil/RecoilCounterPanel';
+import RecoilTodoPanel from './components/recoil/RecoilTodoPanel';
 import JotaiCounterPanel from './components/jotai/JotaiCounterPanel';
+import JotaiTodoPanel from './components/jotai/JotaiTodoPanel';
 
 // 최상위 App
 export default function App() {
@@ -31,7 +33,9 @@ export default function App() {
             <ReduxCounterPanel />
             <ReduxTodoPanel />
             <RecoilCounterPanel />
+            <RecoilTodoPanel />
             <JotaiCounterPanel />
+            <JotaiTodoPanel />
           </NotificationProvider>
         </ThemeProvider>
       </AuthProvider>
