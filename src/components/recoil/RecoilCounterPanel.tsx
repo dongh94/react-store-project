@@ -82,9 +82,7 @@ export default function RecoilCounterPanel() {
           <div className="text-gray-400">loading...</div>
         )}
         {asyncDoubleLoadable.state === 'hasError' && (
-          <div className="text-red-400">
-            error: {(asyncDoubleLoadable.error as Error).message}
-          </div>
+          <div className="text-red-400">error: {String(asyncDoubleLoadable.contents)}</div>
         )}
         {asyncDoubleLoadable.state === 'hasValue' && (
           <div className="text-green-300">
