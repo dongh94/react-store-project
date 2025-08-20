@@ -13,6 +13,8 @@ import RecoilCounterPanel from './components/recoil/RecoilCounterPanel';
 import RecoilTodoPanel from './components/recoil/RecoilTodoPanel';
 import JotaiCounterPanel from './components/jotai/JotaiCounterPanel';
 import JotaiTodoPanel from './components/jotai/JotaiTodoPanel';
+import ZustandCounterPanel from './components/zustand/ZustandCounterPanel';
+import ZustandTodoPanel from './components/zustand/ZustandTodoPanel';
 
 // 최상위 App
 export default function App() {
@@ -36,6 +38,8 @@ export default function App() {
             <RecoilTodoPanel />
             <JotaiCounterPanel />
             <JotaiTodoPanel />
+            <ZustandCounterPanel />
+            <ZustandTodoPanel />
           </NotificationProvider>
         </ThemeProvider>
       </AuthProvider>
