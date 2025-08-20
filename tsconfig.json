@@ -1,0 +1,34 @@
+{
+  // TypeScript 컴파일 옵션 설정 (주석 허용: JSONC)
+  "compilerOptions": {
+    // 최신 문법(비동기/await 등) 타겟. ES2020 이상이면 Promise 타입 포함
+    "target": "ES2020",
+
+    // 전역 타입 정의 포함: ES 표준 + 브라우저 DOM(fetch 등)
+    "lib": ["ES2020", "DOM"],
+
+    // Vite/ESM 환경에 맞춘 모듈 설정
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // React 17+ JSX 트랜스폼
+    "jsx": "react-jsx",
+
+    // 엄격 모드로 타입 안정성 강화
+    "strict": true,
+
+    // 각 파일을 독립 모듈로 취급(트랜스파일 최적화)
+    "isolatedModules": true,
+
+    // JS 출력물은 내보내지 않음(번들러가 담당)
+    "noEmit": true,
+
+    // CJS/ESM 상호운용성 향상(import 호환)
+    "esModuleInterop": true,
+
+    // 외부 d.ts 검사 생략으로 속도 향상
+    "skipLibCheck": true
+  },
+  // src 폴더만 타입 검사 대상
+  "include": ["src"]
+}
