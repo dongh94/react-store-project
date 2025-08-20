@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import {
   todosAtom,
   filterAtom,
@@ -8,42 +8,31 @@ import {
   type TodoFilter,
 } from '../../jotai/atoms/todo';
 import { useState } from 'react';
+import { useTodoActions } from '../../jotai/actions/useTodoActions';
 
 export default function JotaiTodoPanel() {
-  const [todos, setTodos] = useAtom(todosAtom);
+  const [todos] = useAtom(todosAtom);
   const [filter, setFilter] = useAtom(filterAtom);
   const [filtered] = useAtom(filteredTodosAtom);
   const [stats] = useAtom(todoStatsAtom);
 
   const [text, setText] = useState('');
+  const { add, toggle, remove, clearCompleted } = useTodoActions();
 
   const addTodo = () => {
     const value = text.trim();
     if (!value) return;
-    const newTodo: Todo = {
-      id: Date.now(),
-      text: value,
-      completed: false,
-    };
-    setTodos((prev) => [newTodo, ...prev]);
+    add(value);
     setText('');
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-    );
-  };
-
-  const deleteTodo = (id: number) => {
-    setTodos((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const clearCompleted = () => {
-    setTodos((prev) => prev.filter((t) => !t.completed));
-  };
-
-  const FilterButton = ({ value, label }: { value: TodoFilter; label: string }) => (
+  const FilterButton = ({
+    value,
+    label,
+  }: {
+    value: TodoFilter;
+    label: string;
+  }) => (
     <button
       className={`px-3 py-1 rounded border text-sm ${
         filter === value
@@ -82,7 +71,10 @@ export default function JotaiTodoPanel() {
         <div className="flex gap-2">
           <FilterButton value="all" label={`All (${stats.total})`} />
           <FilterButton value="active" label={`Active (${stats.active})`} />
-          <FilterButton value="completed" label={`Completed (${stats.completed})`} />
+          <FilterButton
+            value="completed"
+            label={`Completed (${stats.completed})`}
+          />
         </div>
         <button
           className="text-sm px-2 py-1 rounded bg-gray-700 hover:bg-gray-600"
@@ -107,7 +99,7 @@ export default function JotaiTodoPanel() {
               type="checkbox"
               className="h-4 w-4"
               checked={t.completed}
-              onChange={() => toggleTodo(t.id)}
+              onChange={() => toggle(t.id)}
             />
             <span
               className={`flex-1 ${t.completed ? 'line-through text-gray-400' : ''}`}
@@ -116,7 +108,7 @@ export default function JotaiTodoPanel() {
             </span>
             <button
               className="px-2 py-1 text-xs rounded bg-red-600 hover:bg-red-500"
-              onClick={() => deleteTodo(t.id)}
+              onClick={() => remove(t.id)}
             >
               Delete
             </button>

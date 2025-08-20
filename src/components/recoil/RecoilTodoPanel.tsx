@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   todosState,
   filterState,
@@ -10,36 +10,30 @@ import {
   todoStatsSelector,
 } from '../../recoil/selectors/todoSelectors';
 import { useState } from 'react';
+import { useTodoActions } from '../../recoil/actions/useTodoActions';
 
 export default function RecoilTodoPanel() {
-  const [todos, setTodos] = useRecoilState(todosState);
   const [filter, setFilter] = useRecoilState(filterState);
   const filtered = useRecoilValue(filteredTodosSelector);
   const stats = useRecoilValue(todoStatsSelector);
 
   const [text, setText] = useState('');
+  const { add, toggle, remove, clearCompleted } = useTodoActions();
 
   const addTodo = () => {
     const value = text.trim();
     if (!value) return;
-    const newTodo: Todo = { id: Date.now(), text: value, completed: false };
-    setTodos((prev) => [newTodo, ...prev]);
+    add(value);
     setText('');
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
-  };
-
-  const deleteTodo = (id: number) => {
-    setTodos((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const clearCompleted = () => {
-    setTodos((prev) => prev.filter((t) => !t.completed));
-  };
-
-  const FilterButton = ({ value, label }: { value: TodoFilter; label: string }) => (
+  const FilterButton = ({
+    value,
+    label,
+  }: {
+    value: TodoFilter;
+    label: string;
+  }) => (
     <button
       className={`px-3 py-1 rounded border text-sm ${
         filter === value
@@ -65,7 +59,10 @@ export default function RecoilTodoPanel() {
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && addTodo()}
         />
-        <button className="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500" onClick={addTodo}>
+        <button
+          className="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500"
+          onClick={addTodo}
+        >
           Add
         </button>
       </div>
@@ -75,7 +72,10 @@ export default function RecoilTodoPanel() {
         <div className="flex gap-2">
           <FilterButton value="all" label={`All (${stats.total})`} />
           <FilterButton value="active" label={`Active (${stats.active})`} />
-          <FilterButton value="completed" label={`Completed (${stats.completed})`} />
+          <FilterButton
+            value="completed"
+            label={`Completed (${stats.completed})`}
+          />
         </div>
         <button
           className="text-sm px-2 py-1 rounded bg-gray-700 hover:bg-gray-600"
@@ -88,12 +88,29 @@ export default function RecoilTodoPanel() {
 
       {/* List */}
       <ul className="space-y-2">
-        {filtered.length === 0 && <li className="text-gray-400 text-sm">No todos</li>}
+        {filtered.length === 0 && (
+          <li className="text-gray-400 text-sm">No todos</li>
+        )}
         {filtered.map((t) => (
-          <li key={t.id} className="flex items-center gap-3 bg-gray-700 rounded p-2">
-            <input type="checkbox" className="h-4 w-4" checked={t.completed} onChange={() => toggleTodo(t.id)} />
-            <span className={`flex-1 ${t.completed ? 'line-through text-gray-400' : ''}`}>{t.text}</span>
-            <button className="px-2 py-1 text-xs rounded bg-red-600 hover:bg-red-500" onClick={() => deleteTodo(t.id)}>
+          <li
+            key={t.id}
+            className="flex items-center gap-3 bg-gray-700 rounded p-2"
+          >
+            <input
+              type="checkbox"
+              className="h-4 w-4"
+              checked={t.completed}
+              onChange={() => toggle(t.id)}
+            />
+            <span
+              className={`flex-1 ${t.completed ? 'line-through text-gray-400' : ''}`}
+            >
+              {t.text}
+            </span>
+            <button
+              className="px-2 py-1 text-xs rounded bg-red-600 hover:bg-red-500"
+              onClick={() => remove(t.id)}
+            >
               Delete
             </button>
           </li>
